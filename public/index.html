@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Sky Fall</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 30px;
+      background-color: #f8f9fa;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      width: 60%;
+      padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1558b0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    #shortLink {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sky Fall - Painel de Administração</h1>
+
+  <form id="linkForm">
+    <input type="text" id="originalUrl" placeholder="Cole aqui a URL original" required>
+    <button type="submit">Gerar Link</button>
+  </form>
+
+  <div id="shortLink"></div>
+
+  <h2>Registros de Cliques</h2>
+  <table id="clickTable">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>URL Original</th>
+        <th>IP</th>
+        <th>Cidade</th>
+        <th>Região</th>
+        <th>País</th>
+        <th>Navegador</th>
+        <th>Data/Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Linhas serão preenchidas via JS -->
+    </tbody>
+  </table>
+
+  <script>
+    // Envio do formulário
+    document.getElementById('linkForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const originalUrl = document.getElementById('originalUrl').value;
+
+      const response = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ originalUrl })
+      });
+
+      const data = await response.json();
+      document.getElementById('shortLink').innerHTML = `🔗 Link gerado: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+      document.getElementById('originalUrl').value = '';
+
+      loadTable(); // recarrega os dados
+    });
+
+    // Carrega dados da API e preenche tabela
+    async function loadTable() {
+      const res = await fetch('/dados');
+      const data = await res.json();
+      const tbody = document.querySelector('#clickTable tbody');
+      tbody.innerHTML = '';
+
+      for (const code in data) {
+        const link = data[code];
+        if (link.clicks && link.clicks.length > 0) {
+          link.clicks.forEach(click => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${code}</td>
+              <td><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
+              <td>${click.ip}</td>
+              <td>${click.city || '-'}</td>
+              <td>${click.region || '-'}</td>
+              <td>${click.country || '-'}</td>
+              <td>${click.browser || '-'}</td>
+              <td>${new Date(click.timestamp).toLocaleString('pt-BR')}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      }
+    }
+
+    loadTable(); // carregamento inicial
+  </script>
+</body>
+</html>

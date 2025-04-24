@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecionando...</title>
+  <script>
+    async function rastrearEAbrir() {
+      const path = window.location.pathname;
+      const code = path.replace("/", "");
+
+      const resposta = await fetch("/track/" + code, {
+        method: "POST"
+      });
+
+      const data = await resposta.json();
+
+      if (data.redirectTo) {
+        window.location.href = data.redirectTo;
+      } else {
+
+        document.body.innerHTML = "<h2>Erro ao redirecionar</h2>";
+      }
+    }
+
+    rastrearEAbrir();
+  </script>
+</head>
+<body>
+  <p>Coletando dados e redirecionando...</p>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "skyfall",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "node-fetch": "^3.3.2"
+  }
+}
