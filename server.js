@@ -42,7 +42,7 @@ app.post("/generate", (req, res) => {
   const shortCode = Math.random().toString(36).substring(2, 8);
   db[shortCode] = { originalUrl, clicks: [] };
   fs.writeFileSync("links.json", JSON.stringify(db, null, 2));
-  res.json({ shortUrl: "http://localhost:" + PORT + "/" + shortCode });
+  res.json({ shortUrl: "https://skyfall-j7qj.onrender.com/" + shortCode }); // ← Aqui!
 });
 
 // ROTA: Redirecionamento com consentimento
