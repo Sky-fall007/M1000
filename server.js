@@ -9,6 +9,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/public/login.html');
+});
+
 let db = JSON.parse(fs.readFileSync("links.json"));
 
 // Usuário admin
