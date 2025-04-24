@@ -1,32 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Redirecionando...</title>
-  <script>
-    async function rastrearEAbrir() {
-      const path = window.location.pathname;
-      const code = path.replace("/", "");
-
-      const resposta = await fetch("/track/" + code, {
-        method: "POST"
-      });
-
-      const data = await resposta.json();
-
-      if (data.redirectTo) {
-        window.location.href = data.redirectTo;
-      } else {
-
-        document.body.innerHTML = "<h2>Erro ao redirecionar</h2>";
-      }
+  <meta charset="UTF-8">
+  <title>Rastreamento Sky Fall</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      padding-top: 100px;
     }
-
-    rastrearEAbrir();
-  </script>
+    .box {
+      background: white;
+      display: inline-block;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1558b0;
+    }
+  </style>
 </head>
 <body>
-  <p>Coletando dados e redirecionando...</p>
+  <div class="box">
+    <h2>Este link é rastreável</h2>
+    <p>Ao continuar, você autoriza o rastreamento do seu IP, navegador e localização.</p>
+    <button onclick="consentir()">Continuar</button>
+  </div>
+
+  <script>
+    async function consentir() {
+      const code = window.location.pathname.replace("/", "");
+
+      try {
+        const res = await fetch(`/track/${code}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await res.json();
+        if (data.redirectTo) {
+          window.location.href = data.redirectTo;
+        } else {
+          alert("Erro ao redirecionar.");
+        }
+      } catch (error) {
+        alert("Erro ao rastrear o clique.");
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
