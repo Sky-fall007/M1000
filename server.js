@@ -42,7 +42,7 @@ app.post("/generate", (req, res) => {
   const shortCode = Math.random().toString(36).substring(2, 8);
   db[shortCode] = { originalUrl, clicks: [] };
   fs.writeFileSync("links.json", JSON.stringify(db, null, 2));
-  res.json({ shortUrl: "https://skyfall-j7qj.onrender.com/" + shortCode }); // ← Aqui!
+  res.json({ shortUrl: "https://skyfall-j7qj.onrender.com/" + shortCode });
 });
 
 // ROTA: Redirecionamento com consentimento
@@ -117,4 +117,8 @@ app.get("/export", (req, res) => {
   res.download(filePath);
 });
 
-app.listen(PORT, () => console.log(`Sky Fall rodando em http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Sky Fall rodando na porta ${PORT}`);
+  console.log(`Acesse via browser: https://skyfall-j7qj.onrender.com`);
+});
+
