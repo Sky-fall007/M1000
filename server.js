@@ -60,7 +60,8 @@ app.post("/track/:code", async (req, res) => {
   const link = db[code];
   if (!link) return res.status(404).json({ error: "Link inválido" });
 
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const rawIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+const ip = rawIp.split(",")[0].trim();
   const userAgent = req.headers["user-agent"];
 
   let location = {};
