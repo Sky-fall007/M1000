@@ -71,15 +71,15 @@ app.post("/track/:code", async (req, res) => {
     location = { city: "desconhecida", region: "", country: "" };
   }
 
-  link.clicks.push({
-    timestamp: new Date(),
-    ip,
-    userAgent,
-    city: location.city || "",
-    region: location.region || "",
-    country: location.country || "",
-    browser: userAgent
-  });
+ link.clicks.push({
+  timestamp: new Date(),
+  ip,
+  userAgent,
+  city: location.city || "desconhecida",
+  region: location.region || "",
+  country: location.country || "",
+  browser: userAgent
+});
 
   fs.writeFileSync("links.json", JSON.stringify(db, null, 2));
   res.json({ redirectTo: link.originalUrl });
