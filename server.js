@@ -80,6 +80,14 @@ app.post("/track/:code", async (req, res) => {
   country: location.country || "",
   browser: userAgent
 });
+  console.log(`✅ Clique registrado para: ${code}`);
+console.log({
+  ip,
+  userAgent,
+  city: location.city,
+  region: location.region,
+  country: location.country
+});
 
   fs.writeFileSync("links.json", JSON.stringify(db, null, 2));
   res.json({ redirectTo: link.originalUrl });
