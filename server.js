@@ -18,7 +18,7 @@ let db = JSON.parse(fs.readFileSync("links.json"));
 // Usuário admin
 const adminUser = {
   username: "admin",
-  password: "senha123"
+  password: "bola.ratom1"
 };
 
 // ROTA: Página de login
@@ -64,13 +64,13 @@ app.post("/track/:code", async (req, res) => {
 const ip = rawIp.split(",")[0].trim();
   const userAgent = req.headers["user-agent"];
 
-  let location = {};
-  try {
-    const response = await fetch(`https://ipinfo.io/${ip}/json?token=1c27cbb4340446`);
-    location = await response.json();
-  } catch {
-    location = { city: "desconhecida", region: "", country: "" };
-  }
+let location = {};
+try {
+  const response = await fetch(`https://ipapi.co/${ip}/json/`);
+  location = await response.json();
+} catch {
+  location = { city: "desconhecida", region: "", country: "" };
+}
 
  link.clicks.push({
   timestamp: new Date(),
