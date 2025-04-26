@@ -62,32 +62,33 @@ app.post("/track/:code", async (req, res) => {
 
   const rawIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 const ip = rawIp.split(",")[0].trim();
-  const userAgent = req.headers["user-agent"];
+const userAgent = req.headers["user-agent"];
 
 let location = {};
 try {
-  const response = await fetch(`https://ipapi.co/${ip}/json/`);
+  const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=422fb77d32314d55a001a39e4be22745&ip=${ip}`);
   location = await response.json();
 } catch {
-  location = { city: "desconhecida", region: "", country: "" };
+  location = { city: "desconhecida", state_prov: "", country_code2: "" };
 }
 
- link.clicks.push({
+link.clicks.push({
   timestamp: new Date(),
   ip,
   userAgent,
   city: location.city || "desconhecida",
-  region: location.region || "",
-  country: location.country || "",
+  region: location.state_prov || "",
+  country: location.country_code2 || "",
   browser: userAgent
 });
-  console.log(`✅ Clique registrado para: ${code}`);
+
+console.log(`✅ Clique registrado para: ${code}`);
 console.log({
   ip,
   userAgent,
   city: location.city,
-  region: location.region,
-  country: location.country
+  region: location.state_prov,
+  country: location.country_code2
 });
 
   fs.writeFileSync("links.json", JSON.stringify(db, null, 2));
